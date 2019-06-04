@@ -21,7 +21,7 @@ def get_race_state(race_id):
     selctor = etree.HTML(response)
     comment_all_num = selctor.xpath('//div[@id="racecomments"]/div/h2/span/span/text()')
     comment_site_num = selctor.xpath('//ul[@class="pagination pagination-v1"]/li/a/text()')[-2]
-    return response, comment_site_num
+    return response, comment_all_num, comment_site_num
 
 
 def get_comment_list(url_response):
@@ -31,24 +31,45 @@ def get_comment_list(url_response):
     return user_comment_list
 
 
-def get_comment_userinfo(comments_list,response_text):
+def get_comment_userinfo(comments_list, response_text):
     user_name_list = []
     user_id_list = []
+    tp_ytime_all = []
+    tp_event_all = []
+    tp_finishedtime_all = []
 
     for user in comments_list:
         user_id = user.xpath('h4/a/@href')[0]
         user_name = user.xpath('h4/a/@title')[0]
-        user_tp = re.findall('<p class="result">(.*?)class="comment-score">',race_response,re.S)
+        user_tp = re.findall('<p class="result">(.*?)class="comment-score">', race_response, re.S)
         for item in user_tp:
-            tp_time=re.findall('<span>(.*?)</span>',item,re.S)
-            print(1)
+            tp_state = re.findall('<span>(.*?)</span>', item, re.S)
+            '''网页中出现当只有点评赛事年份信息时，span的列表长度为1；
+               而出现参赛项目与完赛时间时，即列表长度为2，3时显示正常；
+               所以添加循环判断span的列表长度'''
+            if len(tp_state) == 1:
+                tp_ytime = tp_state[0].replace('点评了', '').replace('年赛事', '')
+                tp_event = 'null'
+                tp_finishedtime = 'null'
+            elif len(tp_state) == 2:
+                tp_ytime = tp_state[0].replace('点评了', '').replace('年赛事', '')
+                tp_event = tp_state[1]
+                tp_finishedtime = 'null'
+            else:
+                tp_ytime = tp_state[0].replace('点评了', '').replace('年赛事', '')
+                tp_event = tp_state[1]
+                tp_finishedtime = tp_state[2]
+
+            tp_ytime_all.append(tp_ytime)
+            tp_event_all.append(tp_event)
+            tp_finishedtime_all.append(tp_finishedtime)
 
         user_id_list.append(user_id)
         user_name_list.append(user_name)
         # print(user_id)
         # print(user_name)
         # print(user_tp)
-    return user_id_list, user_name_list
+    return user_id_list, user_name_list, tp_ytime_all, tp_event_all, tp_finishedtime_all
 
 
 def get_comment_scoreinfo(comments_list):
@@ -108,5 +129,5 @@ def get_comment_time(comments_list):
 
 race_response = get_race_state(2740)[0]
 comment_list = get_comment_list(race_response)
-get_comment_userinfo(comment_list,race_response)
+get_comment_userinfo(comment_list, race_response)
 # print(test_race_state(583))

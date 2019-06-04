@@ -10,7 +10,7 @@ def get_RaceIdList_norm():
     return race_id_set2
 
 def get_RaceIdList_all():
-    filename = r'../based_resources/race_dinfo_test.xls'
+    filename = r'../based_resources/race_Dinfo.xls'
     data = xlrd.open_workbook(filename=filename)
     sheet1 = data.sheet_by_index(0)
     user_id_set = sheet1.col_values(3)
