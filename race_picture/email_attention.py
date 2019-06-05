@@ -15,7 +15,7 @@ my_pass = 'mikiyd299N'  # 发件人邮箱密码
 my_user = '244300721@qq.com'  # 收件人邮箱账号，我这边发送给自己
 
 
-def mail():
+def mail(race_id):
     ret = True
     try:
         # # 创建一个带附件的实例,126 & yeah邮箱会检测为垃圾文件，无法发送！
@@ -34,10 +34,10 @@ def mail():
         # part.add_header('Content-Disposition', 'attachment', filename=filename)
         # message.attach(part)
 
-        msg = MIMEText('所有的赛事详细信息已获取并保存至目标文件夹! 请及时查看服务器信息！', 'plain', 'utf-8')
+        msg = MIMEText('id：{}的赛事评论信息已获取并保存至目标文件夹! 请及时查看服务器信息！'.format(str(race_id)), 'plain', 'utf-8')
         msg['From'] = formataddr(["FromRunoob", my_sender])  # 括号里的对应发件人邮箱昵称、发件人邮箱账号
         msg['To'] = formataddr(["FUser", my_user])  # 括号里的对应收件人邮箱昵称、收件人邮箱账号
-        msg['Subject'] = "赛事详细信息已保存"  # 邮件的主题，也可以说是标题
+        msg['Subject'] = "id：{}的赛事评论详细信息已保存".format(str(race_id))  # 邮件的主题，也可以说是标题
 
         server = smtplib.SMTP_SSL("smtp.yeah.net", 465)  # 发件人邮箱中的SMTP服务器，端口是465
         server.login(my_sender, my_pass)  # 括号中对应的是发件人邮箱账号、邮箱密码
