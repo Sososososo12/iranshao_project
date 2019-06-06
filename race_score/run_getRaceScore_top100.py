@@ -9,7 +9,7 @@ race_id_all=reload_excel.get_RaceID_CommentList()
 race_len=len(race_id_all)
 
 
-for race_id_index1 in range(2,100):
+for race_id_index1 in range(51,100):
     '''初始化最终list'''
     comment_race_id = []
     comment_user_id = []
@@ -100,8 +100,9 @@ for race_id_index1 in range(2,100):
                           })
     data1.to_excel(u'../comment_resource/{}_comments.xls'.format(str(race_id)), index=False, encoding='"utf_8_sig')
     print('id：'+str(race_id)+' 的赛事信息已写入完成！'+'\n\n\n')
-    email_attention.mail(race_id)
+    # email_attention.mail(race_id)
     time.sleep(3)
+
 
 
 

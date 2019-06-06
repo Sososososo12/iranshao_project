@@ -32,7 +32,7 @@ def get_RaceID_CommentList():
 
 
 def get_RaceSummaryList():
-    filename = r'../based_resources/race_Dinfo_summary.xls'
+    filename = r'./based_resources/race_Dinfo_summary.xls'
     data = xlrd.open_workbook(filename=filename)
     sheet1 = data.sheet_by_index(0)
     user_summary_set = sheet1.col_values(9)

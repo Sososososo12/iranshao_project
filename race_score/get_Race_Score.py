@@ -10,17 +10,22 @@ import re
 import math
 
 based_comment_site = 'http://iranshao.com/races/{}/comments?page={}'
+
+
 # race_id = 2740
 
 
 # print(html)
 
-def get_race_state(race_id,site_num=1):
-    race_comment_site = based_comment_site.format(str(race_id),str(site_num))
+def get_race_state(race_id, site_num=1):
+    race_comment_site = based_comment_site.format(str(race_id), str(site_num))
     response = requests.get(race_comment_site).text
     selctor = etree.HTML(response)
     comment_all_num = selctor.xpath('//div[@id="racecomments"]/div/h2/span/span/text()')[0]
-    comment_site_num = selctor.xpath('//ul[@class="pagination pagination-v1"]/li/a/text()')[-2]
+    if int(float(comment_all_num)) <= 20:
+        comment_site_num='1'
+    else:
+        comment_site_num = selctor.xpath('//ul[@class="pagination pagination-v1"]/li/a/text()')[-2]
     return response, comment_all_num, comment_site_num
 
 
@@ -137,9 +142,7 @@ def get_comment_time(comments_list):
     return commit_time
 
 
-race_response = get_race_state(583,70)[0]
+race_response = get_race_state(583, 70)[0]
 comment_list = get_comment_list(race_response)
 get_comment_scoreinfo(comment_list)
 get_comment_userinfo(comment_list, race_response)
-
-
